@@ -23,7 +23,7 @@ namespace SaintSender.Core.Services
         public static List<Email> GetMails(string username, string password)
         {
             _emails = new List<Email>();
-            if (CheckInternet() || System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
+            if (CheckInternet())
             {
                 using (var client = new ImapClient())
                 {
@@ -50,18 +50,7 @@ namespace SaintSender.Core.Services
 
         private static bool CheckInternet()
         {
-            using (WebClient wc = new WebClient())
-            {
-                try
-                {
-                    var json = wc.DownloadString("http://vanenet.hu/");
-                    return json.Contains("Van");
-                }
-                catch (Exception e)
-                {
-                    return false;
-                }
-            }
+            return System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable();
         }
 
         private static void AddEmailsToList(ImapClient client)
