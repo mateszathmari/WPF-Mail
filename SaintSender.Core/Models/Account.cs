@@ -14,7 +14,7 @@ namespace SaintSender.Core.Models
         private string _password;
         private bool _rememberUserCredentials;
         public EncryptService _encryptService = new EncryptService();
-        private static string _path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Remail";
+        private string _path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Remail";
 
         public Account()
         {
@@ -98,13 +98,13 @@ namespace SaintSender.Core.Models
             return account;
         }
 
-        public static void DeleteCredentials(string path = "Credentials.xml")
+        public void DeleteCredentials(string path = "Credentials.xml")
         {
             string filePath = Path.Combine(_path, path);
             File.Delete(filePath);
         }
 
-        public static bool SavedCredentialsFound(string path = "Credentials.xml")
+        public bool SavedCredentialsFound(string path = "Credentials.xml")
         {
             string filePath = Path.Combine(_path, path);
             return File.Exists(filePath);

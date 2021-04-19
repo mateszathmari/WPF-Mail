@@ -38,9 +38,8 @@ namespace SaintSender.DesktopUI
 
         private void AuthenticationPhase()
         {
-            if (Account.SavedCredentialsFound())
+            if (acc.SavedCredentialsFound())
             {
-                Account acc = new Account();     //Here some tricks
                 Account account = acc.LoadCredentials();
                 if (!account.RememberUserCredentials)
                 {
@@ -106,7 +105,7 @@ namespace SaintSender.DesktopUI
         private void Logout()
         {
             acc.BackupCredentials();
-            Account.DeleteCredentials();
+            acc.DeleteCredentials();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
