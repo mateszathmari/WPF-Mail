@@ -20,12 +20,14 @@ namespace SaintSender.DesktopUI
     public partial class MainWindow : Window
     {
         private MainWindowViewModel _vm;
+        ManageAccount _manageAccount;
 
         public MainWindow()
         {
             // set DataContext to the ViewModel object
             _vm = new MainWindowViewModel();
             DataContext = _vm;
+            _manageAccount = _vm.ManageAccount;
             InitializeComponent();
             LoginProcedure();
         }
@@ -37,9 +39,9 @@ namespace SaintSender.DesktopUI
 
         private void AuthenticationPhase()
         {
-            if (Account.SavedCredentialsFound())
+            if (_manageAccount.SavedCredentialsFound())
             {
-                Account account = Account.LoadCredentials();
+                Account account = _manageAccount.LoadCredentials();
                 if (!account.RememberUserCredentials)
                 {
                     AskForLogin();
@@ -58,7 +60,7 @@ namespace SaintSender.DesktopUI
         private void AskForLogin()
         {
             this.Hide();
-            LoginWindow loginWindow = new LoginWindow();
+            LoginWindow loginWindow = new LoginWindow(_manageAccount);
             loginWindow.ShowDialog();
             LoadMails();
             this.Show();
@@ -103,13 +105,13 @@ namespace SaintSender.DesktopUI
 
         private void Logout()
         {
-            Account.BackupCredentials();
-            Account.DeleteCredentials();
+            _manageAccount.BackupCredentials();
+            _manageAccount.DeleteCredentials();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            Account.BackupCredentials();
+            _manageAccount.BackupCredentials();
             Environment.Exit(0);
         }
 

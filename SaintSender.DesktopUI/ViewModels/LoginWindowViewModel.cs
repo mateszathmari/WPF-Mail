@@ -12,10 +12,12 @@ namespace SaintSender.DesktopUI.ViewModels
         private string _username;
         private string _warningMessage;
         private Account _account;
+        private MailService _mailService = new MailService();
 
 
         public LoginWindowViewModel()
         {
+ 
             _account = new Account();
         }
 
@@ -47,7 +49,7 @@ namespace SaintSender.DesktopUI.ViewModels
 
         public bool AttemptLogin(string username, string password)
         {
-            return MailService.IsCorrectLoginCredentials(username, password);
+            return _mailService.IsCorrectLoginCredentials(username, password);
         }
     }
 }

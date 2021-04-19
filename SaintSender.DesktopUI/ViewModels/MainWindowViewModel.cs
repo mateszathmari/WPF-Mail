@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using SaintSender.Core.Interfaces;
 using SaintSender.Core.Services;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 using MailKit;
 using MimeKit;
 using SaintSender.Core.Models;
@@ -21,6 +24,8 @@ namespace SaintSender.DesktopUI.ViewModels
         private readonly IGreetService _greetService;
         private List<Email> _emails;
         private Account _account;
+        private MailService _mailService = new MailService();
+        private ManageAccount _manageAccount = new ManageAccount();
 
         /// <summary>
         /// Whenever a property value changed the subscribed event handler is called.
@@ -63,6 +68,15 @@ namespace SaintSender.DesktopUI.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets or sets the manage account.
+        /// </summary>
+        public ManageAccount ManageAccount
+        {
+            get => _manageAccount;
+
+        }
+
         public MainWindowViewModel()
         {
             Name = string.Empty;
@@ -79,12 +93,12 @@ namespace SaintSender.DesktopUI.ViewModels
 
         public void LoadMails()
         {
-            Emails = MailService.GetMails(_account.Username, _account.Password);
+            Emails = _mailService.GetMails(_account.Username, _account.Password);
         }
 
         public void SetEmailSeen(UniqueId uId)
         {
-            MailService.SetEmailSeen(uId, _account.Username, _account.Password);
+            _mailService.SetEmailSeen(uId, _account.Username, _account.Password);
 
             List<Email> copyEmailList = Emails.ToList();
             foreach (Email email in copyEmailList)
@@ -97,9 +111,10 @@ namespace SaintSender.DesktopUI.ViewModels
             }
         }
 
+       
         public void LoadCredentials()
         {
-            _account = Account.LoadCredentials();
+            _account = _manageAccount.LoadCredentials();
             Name = _account.Username;
         }
     }
