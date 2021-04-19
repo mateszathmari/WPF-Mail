@@ -70,7 +70,7 @@ namespace SaintSender.Core.Services
 
         public static void SetEmailSeen(UniqueId uId, string username, string password)
         {
-            if (CheckInternet() || System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
+            if (CheckInternet())
             {
                 using (var client = new ImapClient())
                 {
