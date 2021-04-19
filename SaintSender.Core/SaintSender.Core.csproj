@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\ManageAccount.cs" />
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\Email.cs" />
     <Compile Include="Services\EncryptService.cs" />

@@ -14,9 +14,11 @@ namespace SaintSender.DesktopUI.Views
     public partial class LoginWindow : Window
     {
         private LoginWindowViewModel _vm;
+        private ManageAccount _manageAccount;
 
-        public LoginWindow()
+        public LoginWindow(ManageAccount manageAccount)
         {
+            _manageAccount = manageAccount;
             _vm = new LoginWindowViewModel();
             DataContext = _vm;
             InitializeComponent();
@@ -54,8 +56,8 @@ namespace SaintSender.DesktopUI.Views
                         {
                             if (!HaveInternetConnection())
                             {
-                                Account acc = new Account();  // here some trick as well
-                                Account backupAccount = acc.LoadBackupAccount();
+                                
+                                Account backupAccount = _manageAccount.LoadBackupAccount();
                                 if (backupAccount.RememberUserCredentials)
                                 {
                                     Authenticate(username);
@@ -132,7 +134,7 @@ namespace SaintSender.DesktopUI.Views
 
             Account account = new Account();
             account.Setup(username, PasswordTxt.Password, rememberCredentials);
-            account.SaveCredentials(account);
+            _manageAccount.SaveCredentials(account);
         }
 
         private bool IsEmail(string input)

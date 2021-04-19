@@ -25,6 +25,7 @@ namespace SaintSender.DesktopUI.ViewModels
         private List<Email> _emails;
         private Account _account;
         private MailService _mailService = new MailService();
+        private ManageAccount _manageAccount = new ManageAccount();
 
         /// <summary>
         /// Whenever a property value changed the subscribed event handler is called.
@@ -67,6 +68,15 @@ namespace SaintSender.DesktopUI.ViewModels
             }
         }
 
+        /// <summary>
+        /// Gets or sets the manage account.
+        /// </summary>
+        public ManageAccount ManageAccount
+        {
+            get => _manageAccount;
+
+        }
+
         public MainWindowViewModel()
         {
             Name = string.Empty;
@@ -104,8 +114,7 @@ namespace SaintSender.DesktopUI.ViewModels
        
         public void LoadCredentials()
         {
-            Account acc = new Account();     //Here some tricks
-            _account = acc.LoadCredentials();
+            _account = _manageAccount.LoadCredentials();
             Name = _account.Username;
         }
     }

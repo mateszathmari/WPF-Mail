@@ -12,6 +12,7 @@ namespace SaintSender.DesktopUI.ViewModels
         private string _message;
         private string _newMailSubject;
         private MailService _mailService = new MailService();
+        ManageAccount acc = new ManageAccount();  //here some tricks as well
 
         public SendNewEmailWindowViewModel(string sender, string subject, string body)
         {
@@ -73,7 +74,6 @@ namespace SaintSender.DesktopUI.ViewModels
 
         public void LoadCredentials()
         {
-            Account acc = new Account();  //here some tricks as well
             _account = acc.LoadCredentials();
         }
 
