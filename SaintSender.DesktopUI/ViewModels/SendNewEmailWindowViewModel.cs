@@ -11,6 +11,7 @@ namespace SaintSender.DesktopUI.ViewModels
         private string _toMail;
         private string _message;
         private string _newMailSubject;
+        private MailService _mailService = new MailService();
 
         public SendNewEmailWindowViewModel(string sender, string subject, string body)
         {
@@ -78,7 +79,7 @@ namespace SaintSender.DesktopUI.ViewModels
         public void SendMail()
         {
             // MailService.SendNewEmail("tom1.wales2@gmail.com", "Almafa1234", "should work", "someTitle", "mateszathmari@gmail.com");
-            MailService.SendNewEmail(_account.Username, _account.Password, _message, _newMailSubject, _toMail);
+            _mailService.SendNewEmail(_account.Username, _account.Password, _message, _newMailSubject, _toMail);
         }
     }
 }

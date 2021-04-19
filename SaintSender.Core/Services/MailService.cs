@@ -17,10 +17,10 @@ namespace SaintSender.Core.Services
 {
     public class MailService
     {
-        private static List<Email> _emails = new List<Email>();
-        private static string _path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Remail";
+        private List<Email> _emails = new List<Email>();
+        private string _path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Remail";
 
-        public static List<Email> GetMails(string username, string password)
+        public List<Email> GetMails(string username, string password)
         {
             _emails = new List<Email>();
             if (CheckInternet())
@@ -48,12 +48,12 @@ namespace SaintSender.Core.Services
             return _emails;
         }
 
-        private static bool CheckInternet()
+        private bool CheckInternet()
         {
             return System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable();
         }
 
-        private static void AddEmailsToList(ImapClient client)
+        private void AddEmailsToList(ImapClient client)
         {
             var uniqueIdList = client.Inbox.Search(SearchQuery.All);
             foreach (UniqueId id in uniqueIdList)
@@ -68,7 +68,7 @@ namespace SaintSender.Core.Services
             }
         }
 
-        public static void SetEmailSeen(UniqueId uId, string username, string password)
+        public void SetEmailSeen(UniqueId uId, string username, string password)
         {
             if (CheckInternet())
             {
@@ -86,7 +86,7 @@ namespace SaintSender.Core.Services
         }
 
 
-        public static void SendNewEmail(string username, string password, string text, string subject, string toMail)
+        public void SendNewEmail(string username, string password, string text, string subject, string toMail)
         {
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress(username));
@@ -110,7 +110,7 @@ namespace SaintSender.Core.Services
             }
         }
 
-        public static bool IsCorrectLoginCredentials(string username, string password)
+        public bool IsCorrectLoginCredentials(string username, string password)
         {
             try
             {
@@ -128,7 +128,7 @@ namespace SaintSender.Core.Services
             }
         }
 
-        public static void NewBackup(List<Email> emails, string path = "EmailBackup.xml")
+        public void NewBackup(List<Email> emails, string path = "EmailBackup.xml")
         {
             string filePath = Path.Combine(_path, path);
 
@@ -144,7 +144,7 @@ namespace SaintSender.Core.Services
             }
         }
 
-        private static List<Email> EncryptEmails(List<Email> unencryptedEmails)
+        private List<Email> EncryptEmails(List<Email> unencryptedEmails)
         {
             List<Email> encryptedEmails = new List<Email>();
             foreach (Email unencryptedEmail in unencryptedEmails)
@@ -158,7 +158,7 @@ namespace SaintSender.Core.Services
             return encryptedEmails;
         }
 
-        public static List<Email> LoadBackup(string path = "EmailBackup.xml")
+        public List<Email> LoadBackup(string path = "EmailBackup.xml")
         {
             string filePath = Path.Combine(_path, path);
 
@@ -176,7 +176,7 @@ namespace SaintSender.Core.Services
             return null;
         }
 
-        private static List<Email> DecryptEmails(List<Email> encryptedEmails)
+        private List<Email> DecryptEmails(List<Email> encryptedEmails)
         {
             List<Email> decryptedEmails = new List<Email>();
             foreach (Email encryptedEmail in encryptedEmails)

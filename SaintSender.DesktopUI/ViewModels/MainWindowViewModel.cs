@@ -21,6 +21,7 @@ namespace SaintSender.DesktopUI.ViewModels
         private readonly IGreetService _greetService;
         private List<Email> _emails;
         private Account _account;
+        private MailService _mailService = new MailService();
 
         /// <summary>
         /// Whenever a property value changed the subscribed event handler is called.
@@ -79,12 +80,12 @@ namespace SaintSender.DesktopUI.ViewModels
 
         public void LoadMails()
         {
-            Emails = MailService.GetMails(_account.Username, _account.Password);
+            Emails = _mailService.GetMails(_account.Username, _account.Password);
         }
 
         public void SetEmailSeen(UniqueId uId)
         {
-            MailService.SetEmailSeen(uId, _account.Username, _account.Password);
+            _mailService.SetEmailSeen(uId, _account.Username, _account.Password);
 
             List<Email> copyEmailList = Emails.ToList();
             foreach (Email email in copyEmailList)
