@@ -20,6 +20,7 @@ namespace SaintSender.DesktopUI
     public partial class MainWindow : Window
     {
         private MainWindowViewModel _vm;
+        private Account acc = new Account();  //here some tricks as well
 
         public MainWindow()
         {
@@ -39,7 +40,8 @@ namespace SaintSender.DesktopUI
         {
             if (Account.SavedCredentialsFound())
             {
-                Account account = Account.LoadCredentials();
+                Account acc = new Account();     //Here some tricks
+                Account account = acc.LoadCredentials();
                 if (!account.RememberUserCredentials)
                 {
                     AskForLogin();
@@ -103,13 +105,13 @@ namespace SaintSender.DesktopUI
 
         private void Logout()
         {
-            Account.BackupCredentials();
+            acc.BackupCredentials();
             Account.DeleteCredentials();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            Account.BackupCredentials();
+            acc.BackupCredentials();
             Environment.Exit(0);
         }
 

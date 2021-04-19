@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using SaintSender.Core.Interfaces;
 using SaintSender.Core.Services;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 using MailKit;
 using MimeKit;
 using SaintSender.Core.Models;
@@ -98,9 +101,11 @@ namespace SaintSender.DesktopUI.ViewModels
             }
         }
 
+       
         public void LoadCredentials()
         {
-            _account = Account.LoadCredentials();
+            Account acc = new Account();     //Here some tricks
+            _account = acc.LoadCredentials();
             Name = _account.Username;
         }
     }

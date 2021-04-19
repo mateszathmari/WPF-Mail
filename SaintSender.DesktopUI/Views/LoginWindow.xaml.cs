@@ -54,7 +54,8 @@ namespace SaintSender.DesktopUI.Views
                         {
                             if (!HaveInternetConnection())
                             {
-                                Account backupAccount = Account.LoadBackupAccount();
+                                Account acc = new Account();  // here some trick as well
+                                Account backupAccount = acc.LoadBackupAccount();
                                 if (backupAccount.RememberUserCredentials)
                                 {
                                     Authenticate(username);
@@ -131,7 +132,7 @@ namespace SaintSender.DesktopUI.Views
 
             Account account = new Account();
             account.Setup(username, PasswordTxt.Password, rememberCredentials);
-            Account.SaveCredentials(account);
+            account.SaveCredentials(account);
         }
 
         private bool IsEmail(string input)

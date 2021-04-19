@@ -73,7 +73,8 @@ namespace SaintSender.DesktopUI.ViewModels
 
         public void LoadCredentials()
         {
-            _account = Account.LoadCredentials();
+            Account acc = new Account();  //here some tricks as well
+            _account = acc.LoadCredentials();
         }
 
         public void SendMail()

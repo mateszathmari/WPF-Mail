@@ -13,6 +13,7 @@ namespace SaintSender.Core.Models
         private string _username;
         private string _password;
         private bool _rememberUserCredentials;
+        public EncryptService _encryptService = new EncryptService();
         private static string _path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Remail";
 
         public Account()
@@ -26,7 +27,7 @@ namespace SaintSender.Core.Models
             _rememberUserCredentials = rememberUserCredentials;
         }
 
-        public static void SaveCredentials(Account account, string path = "Credentials.xml")
+        public void SaveCredentials(Account account, string path = "Credentials.xml")
         {
             string filePath = Path.Combine(_path, path);
 
@@ -43,20 +44,20 @@ namespace SaintSender.Core.Models
             }
         }
 
-        public static void BackupCredentials(string path = "BackupCredentials.xml")
+        public void BackupCredentials(string path = "BackupCredentials.xml")
         {
             Account account = LoadCredentials();
             SaveCredentials(account, path);
         }
 
-        private static Account EncryptAccount(Account account)
+        private Account EncryptAccount(Account account)
         {
-            account.Username = EncryptService.Encrypt(account.Username);
-            account.Password = EncryptService.Encrypt(account.Password);
+            account.Username = _encryptService.Encrypt(account.Username);
+            account.Password = _encryptService.Encrypt(account.Password);
             return account;
         }
 
-        public static Account LoadCredentials(string path = "Credentials.xml")
+        public Account LoadCredentials(string path = "Credentials.xml")
         {
             string filePath = Path.Combine(_path, path);
 
@@ -73,7 +74,7 @@ namespace SaintSender.Core.Models
             return LoadBackupAccount();
         }
 
-        public static Account LoadBackupAccount(string path = "BackupCredentials.xml")
+        public Account LoadBackupAccount(string path = "BackupCredentials.xml")
         {
             string filePath = Path.Combine(_path, path);
 
@@ -90,10 +91,10 @@ namespace SaintSender.Core.Models
             return null;
         }
 
-        private static Account DecryptAccount(Account account)
+        private Account DecryptAccount(Account account)
         {
-            account.Username = EncryptService.Decrypt(account.Username);
-            account.Password = EncryptService.Decrypt(account.Password);
+            account.Username = _encryptService.Decrypt(account.Username);
+            account.Password = _encryptService.Decrypt(account.Password);
             return account;
         }
 

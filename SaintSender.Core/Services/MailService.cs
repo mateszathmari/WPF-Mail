@@ -18,6 +18,8 @@ namespace SaintSender.Core.Services
     public class MailService
     {
         private List<Email> _emails = new List<Email>();
+        private EncryptService _encryptService = new EncryptService();
+
         private string _path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Remail";
 
         public List<Email> GetMails(string username, string password)
@@ -150,9 +152,9 @@ namespace SaintSender.Core.Services
             foreach (Email unencryptedEmail in unencryptedEmails)
             {
                 Email encryptedEmail = new Email(unencryptedEmail.Seen, unencryptedEmail.Sender, unencryptedEmail.Subject, unencryptedEmail.Date, unencryptedEmail.Body, unencryptedEmail.UId);
-                encryptedEmail.Sender = EncryptService.Encrypt(unencryptedEmail.Sender);
-                encryptedEmail.Subject = EncryptService.Encrypt(unencryptedEmail.Subject);
-                encryptedEmail.Body = EncryptService.Encrypt(unencryptedEmail.Sender);
+                encryptedEmail.Sender = _encryptService.Encrypt(unencryptedEmail.Sender);
+                encryptedEmail.Subject = _encryptService.Encrypt(unencryptedEmail.Subject);
+                encryptedEmail.Body = _encryptService.Encrypt(unencryptedEmail.Sender);
                 encryptedEmails.Add(encryptedEmail);
             }
             return encryptedEmails;
@@ -182,9 +184,9 @@ namespace SaintSender.Core.Services
             foreach (Email encryptedEmail in encryptedEmails)
             {
                 Email decryptedEmail = new Email(encryptedEmail.Seen, encryptedEmail.Sender, encryptedEmail.Subject, encryptedEmail.Date, encryptedEmail.Body, encryptedEmail.UId);
-                decryptedEmail.Sender = EncryptService.Decrypt(encryptedEmail.Sender);
-                decryptedEmail.Subject = EncryptService.Decrypt(encryptedEmail.Subject);
-                decryptedEmail.Body = EncryptService.Decrypt(encryptedEmail.Body);
+                decryptedEmail.Sender = _encryptService.Decrypt(encryptedEmail.Sender);
+                decryptedEmail.Subject = _encryptService.Decrypt(encryptedEmail.Subject);
+                decryptedEmail.Body = _encryptService.Decrypt(encryptedEmail.Body);
                 decryptedEmails.Add(decryptedEmail);
             }
             return decryptedEmails;
