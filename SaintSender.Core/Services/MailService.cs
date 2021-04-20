@@ -55,18 +55,22 @@ namespace SaintSender.Core.Services
             return System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable();
         }
 
+        private Email getEmailById(ImapClient client, UniqueId id)
+        {
+            var info = client.Inbox.Fetch(new[] {id}, MessageSummaryItems.Flags);
+            var seen = info[0].Flags.Value.HasFlag(MessageFlags.Seen);
+            var mail = client.Inbox.GetMessage(id);
+
+            return new Email(seen, mail.From.ToString(), mail.Subject, mail.Date.DateTime, mail.TextBody,
+                id);
+        }
+
         private void AddEmailsToList(ImapClient client)
         {
             var uniqueIdList = client.Inbox.Search(SearchQuery.All);
             foreach (UniqueId id in uniqueIdList)
             {
-                var info = client.Inbox.Fetch(new[] { id }, MessageSummaryItems.Flags);
-                var seen = info[0].Flags.Value.HasFlag(MessageFlags.Seen);
-                var mail = client.Inbox.GetMessage(id);
-
-                Email email = new Email(seen, mail.From.ToString(), mail.Subject, mail.Date.DateTime, mail.TextBody,
-                    id);
-                _emails.Add(email);
+                _emails.Add(getEmailById(client, id));
             }
         }
 
@@ -138,6 +142,7 @@ namespace SaintSender.Core.Services
             {
                 File.Delete(filePath);
             }
+
             List<Email> encremails = EncryptEmails(emails);
             using (StreamWriter sw = new StreamWriter(filePath))
             {
@@ -151,12 +156,14 @@ namespace SaintSender.Core.Services
             List<Email> encryptedEmails = new List<Email>();
             foreach (Email unencryptedEmail in unencryptedEmails)
             {
-                Email encryptedEmail = new Email(unencryptedEmail.Seen, unencryptedEmail.Sender, unencryptedEmail.Subject, unencryptedEmail.Date, unencryptedEmail.Body, unencryptedEmail.UId);
+                Email encryptedEmail = new Email(unencryptedEmail.Seen, unencryptedEmail.Sender,
+                    unencryptedEmail.Subject, unencryptedEmail.Date, unencryptedEmail.Body, unencryptedEmail.UId);
                 encryptedEmail.Sender = _encryptService.Encrypt(unencryptedEmail.Sender);
                 encryptedEmail.Subject = _encryptService.Encrypt(unencryptedEmail.Subject);
                 encryptedEmail.Body = _encryptService.Encrypt(unencryptedEmail.Sender);
                 encryptedEmails.Add(encryptedEmail);
             }
+
             return encryptedEmails;
         }
 
@@ -169,7 +176,7 @@ namespace SaintSender.Core.Services
                 using (StreamReader sw = new StreamReader(filePath))
                 {
                     XmlSerializer xs = new XmlSerializer(typeof(List<Email>));
-                    List<Email> encryptedEmails = (List<Email>)xs.Deserialize(sw);
+                    List<Email> encryptedEmails = (List<Email>) xs.Deserialize(sw);
                     List<Email> decryptedEmails = DecryptEmails(encryptedEmails);
                     return decryptedEmails;
                 }
@@ -183,12 +190,14 @@ namespace SaintSender.Core.Services
             List<Email> decryptedEmails = new List<Email>();
             foreach (Email encryptedEmail in encryptedEmails)
             {
-                Email decryptedEmail = new Email(encryptedEmail.Seen, encryptedEmail.Sender, encryptedEmail.Subject, encryptedEmail.Date, encryptedEmail.Body, encryptedEmail.UId);
+                Email decryptedEmail = new Email(encryptedEmail.Seen, encryptedEmail.Sender, encryptedEmail.Subject,
+                    encryptedEmail.Date, encryptedEmail.Body, encryptedEmail.UId);
                 decryptedEmail.Sender = _encryptService.Decrypt(encryptedEmail.Sender);
                 decryptedEmail.Subject = _encryptService.Decrypt(encryptedEmail.Subject);
                 decryptedEmail.Body = _encryptService.Decrypt(encryptedEmail.Body);
                 decryptedEmails.Add(decryptedEmail);
             }
+
             return decryptedEmails;
         }
     }
