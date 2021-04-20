@@ -1,4 +1,10 @@
-# SaintSender
+# WPF Mail
+
+## Background story
+
+This was a team project, we had 4 days (Include planning) to make the requirements below.<br>
+This is an email service desktop application.<br>
+My responsibility was everything regarding new email and backup emails.Now I working on tests and refactoring.
 
 ## Story
 
